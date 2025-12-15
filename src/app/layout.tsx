@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Suspense } from "react";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { SearchBar } from "../components/search-bar";
@@ -41,7 +42,9 @@ export default function RootLayout({
                   Fast, ad-free search for movies, TV & people
                 </span>
               </Link>
-              <SearchBar />
+              <Suspense fallback={null}>
+                <SearchBar />
+              </Suspense>
             </div>
           </header>
           <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col px-4 py-6">
