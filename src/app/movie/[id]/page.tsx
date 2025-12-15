@@ -52,16 +52,11 @@ export default async function MoviePage({ params }: MoviePageProps) {
         v.key
     ) ?? movie.videos?.results.find((v) => v.site === "YouTube" && v.key);
 
-  const letterboxdQuery = [
-    movie.title,
-    movie.release_date ? getYearFromDate(movie.release_date) : "",
-  ]
-    .filter(Boolean)
-    .join(" ");
-
-  const letterboxdUrl = `https://letterboxd.com/search/${encodeURIComponent(
-    letterboxdQuery || movie.title
-  )}/`;
+  const releaseYear = movie.release_date
+    ? getYearFromDate(movie.release_date)
+    : "";
+  const letterboxdSlugValue = buildLetterboxdSlug(movie.title, releaseYear);
+  const letterboxdUrl = `https://letterboxd.com/film/${letterboxdSlugValue}/`;
 
   return (
     <div className="flex flex-1 flex-col gap-6">
@@ -287,6 +282,15 @@ function ProfileThumb({ name, path }: { name: string; path?: string | null }) {
       <Image src={url} alt={name} fill sizes="32px" className="object-cover" />
     </div>
   );
+}
+
+function buildLetterboxdSlug(title: string, year?: string) {
+  const base = title
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+  const y = year?.trim();
+  return y ? `${base}-${y}` : base;
 }
 
 
