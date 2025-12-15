@@ -52,6 +52,17 @@ export default async function MoviePage({ params }: MoviePageProps) {
         v.key
     ) ?? movie.videos?.results.find((v) => v.site === "YouTube" && v.key);
 
+  const letterboxdQuery = [
+    movie.title,
+    movie.release_date ? getYearFromDate(movie.release_date) : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
+
+  const letterboxdUrl = `https://letterboxd.com/search/${encodeURIComponent(
+    letterboxdQuery || movie.title
+  )}/`;
+
   return (
     <div className="flex flex-1 flex-col gap-6">
       <section className="flex flex-col gap-6 md:flex-row">
@@ -97,18 +108,26 @@ export default async function MoviePage({ params }: MoviePageProps) {
               {movie.overview}
             </p>
           )}
-          {trailer && (
-            <div className="mt-3 text-sm">
+          <div className="mt-3 flex flex-wrap gap-2 text-xs">
+            {trailer && (
               <a
                 href={`https://www.youtube.com/watch?v=${trailer.key}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 rounded-md border border-zinc-700 bg-zinc-900 px-3 py-1 text-xs font-medium text-zinc-100 hover:border-zinc-500 hover:bg-zinc-800"
+                className="inline-flex items-center gap-1 rounded-md border border-zinc-700 bg-zinc-900 px-3 py-1 font-medium text-zinc-100 hover:border-zinc-500 hover:bg-zinc-800"
               >
                 Watch trailer on YouTube
               </a>
-            </div>
-          )}
+            )}
+            <a
+              href={letterboxdUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 rounded-md border border-zinc-800 bg-zinc-950 px-3 py-1 font-medium text-zinc-200 hover:border-zinc-600 hover:bg-zinc-900"
+            >
+              Open on Letterboxd
+            </a>
+          </div>
         </div>
       </section>
 
