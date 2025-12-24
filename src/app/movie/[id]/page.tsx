@@ -55,8 +55,10 @@ export default async function MoviePage({ params }: MoviePageProps) {
   const releaseYear = movie.release_date
     ? getYearFromDate(movie.release_date)
     : "";
-  const letterboxdSlugValue = buildLetterboxdSlug(movie.title, releaseYear);
-  const letterboxdUrl = `https://letterboxd.com/film/${letterboxdSlugValue}/`;
+  const letterboxdSearchQuery = releaseYear
+    ? `${movie.title} ${releaseYear}`
+    : movie.title;
+  const letterboxdUrl = `https://letterboxd.com/search/${encodeURIComponent(letterboxdSearchQuery)}/`;
 
   return (
     <div className="flex flex-1 flex-col gap-6">
@@ -283,14 +285,4 @@ function ProfileThumb({ name, path }: { name: string; path?: string | null }) {
     </div>
   );
 }
-
-function buildLetterboxdSlug(title: string, year?: string) {
-  const base = title
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
-  const y = year?.trim();
-  return y ? `${base}-${y}` : base;
-}
-
 
